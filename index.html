@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111418">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Training">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Trainingsplan</title>
+<style>
+:root{--bg:#111418;--card:#1c2128;--fg:#eef1f4;--mut:#9aa5b1;--acc:#ff9f1c;--ok:#2ecc71;--line:#2d343d}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.4 system-ui,sans-serif;padding:0 12px calc(40px + env(safe-area-inset-bottom))}
+header{position:sticky;top:0;padding-top:env(safe-area-inset-top);background:var(--bg);padding-bottom:10px;z-index:5}
+.tabs{display:flex;gap:8px}
+.tabs button{flex:1;padding:14px 6px;font-size:16px;font-weight:600;border:2px solid var(--line);background:var(--card);color:var(--fg);border-radius:12px}
+.tabs button.on{border-color:var(--acc);color:var(--acc)}
+.bar{height:8px;background:var(--line);border-radius:4px;margin-top:10px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--ok);transition:width .2s}
+h2{font-size:15px;color:var(--acc);text-transform:uppercase;letter-spacing:.05em;margin:22px 0 8px}
+.ex{background:var(--card);border-radius:14px;padding:12px;margin-bottom:10px}
+.ex.done{opacity:.6}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.name{font-weight:700}.vol{color:var(--acc);font-size:14px}
+.sets{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;align-items:center}
+.set{width:54px;height:54px;border-radius:50%;border:2px solid var(--mut);background:none;color:var(--fg);font-size:18px;font-weight:700}
+.set.on{background:var(--ok);border-color:var(--ok);color:#06210f}
+.w{width:86px;height:54px;border-radius:12px;border:2px solid var(--line);background:var(--bg);color:var(--fg);font-size:17px;text-align:center;margin-left:auto}
+.info{background:none;border:0;color:var(--mut);font-size:14px;padding:6px 0 0;text-decoration:underline}
+.tip{display:none;color:var(--mut);font-size:15px;margin-top:6px}
+.tip.show{display:block}
+.row{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:14px;padding:14px;margin-bottom:8px;min-height:60px;width:100%;border:0;color:var(--fg);font-size:17px;text-align:left}
+.row .box{flex:none;width:30px;height:30px;border:2px solid var(--mut);border-radius:8px;display:flex;align-items:center;justify-content:center}
+.row.on .box{background:var(--ok);border-color:var(--ok)}
+.row.on .box:after{content:"✓";color:#06210f;font-weight:900}
+.row.on .t{text-decoration:line-through;color:var(--mut)}
+.row small{display:block;color:var(--mut)}
+.note{color:var(--mut);font-size:14px}
+.reset{width:100%;margin-top:24px;padding:16px;border-radius:12px;border:2px solid #e74c3c;background:none;color:#e74c3c;font-size:17px;font-weight:700}
+</style>
+</head>
+<body>
+<header>
+  <div class="tabs" id="tabs"></div>
+  <div class="bar"><i id="prog"></i></div>
+</header>
+<main id="main"></main>
+<script>
+// Daten: hier kann der Plan einfach angepasst werden. sets=0 -> einfache Checkbox ohne Gewicht.
+const PLAN = {
+  A: {
+    title: "Einheit A",
+    sections: [
+      {h: "Aufwärmen (8–10 Min.)", items: [
+        {n: "Cat-Cow", v: "5 Wdh.", s: 0, t: "Rücken abwechselnd rund und hohl machen."},
+        {n: "Hüftkreisen", v: "5 Wdh. / Seite", s: 0},
+        {n: "Worlds Greatest Stretch", v: "5 Wdh. / Seite", s: 0},
+        {n: "Glute Bridges", v: "2 × 10", s: 0},
+        {n: "Band Walks", v: "2 × 10", s: 0}]},
+      {h: "Kraft", items: [
+        {n: "Goblet Squat / Kniebeuge", v: "3 × 6–8", s: 3, w: 1, t: "Kurzhantel vor der Brust, Füße schulterbreit. Brust aufrecht, Knie folgen den Zehen, Fersen am Boden."},
+        {n: "Rumänisches Kreuzheben", v: "3 × 8", s: 3, w: 1, t: "Hantel nah am Körper, Knie leicht gebeugt. Hüfte nach hinten, Rücken gerade, bis Dehnung hinten im Oberschenkel."},
+        {n: "Bulgarian Split Squat", v: "3 × 8–10 / Seite", s: 3, w: 1, t: "Hinterer Fuß auf der Bank. Oberkörper aufrecht, senkrecht absenken."},
+        {n: "Klimmzug (Band) / Latzug", v: "3 × 6–10", s: 3, w: 1, t: "Schulterblätter zuerst nach unten, dann Ellbogen zu den Hüften. Kontrolliert ablassen."},
+        {n: "Schulterdrücken (stehend)", v: "3 × 8–10", s: 3, w: 1, t: "Rippen unten, Gesäß und Bauch anspannen, kein Hohlkreuz."},
+        {n: "Plank + Side Plank", v: "3 × 30–45 Sek.", s: 3, t: "Körper in einer Linie, Gesäß fest. Seitstütz je Seite."},
+        {n: "Pallof Press", v: "3 × 10 / Seite", s: 3, w: 1, t: "Seilzug seitlich auf Brusthöhe. Arme strecken, der Drehung widerstehen."}]},
+      {h: "Dehn-Session (Waden zuerst)", items: [
+        {n: "Wade an der Wand, Knie gestreckt", v: "3 × 45 Sek. / Seite", s: 0, t: "Ferse am Boden, Hüfte zur Wand schieben."},
+        {n: "Wade, Knie gebeugt", v: "3 × 45 Sek. / Seite", s: 0, t: "Ferse bleibt unten. Dehnt Soleus und Achillessehne."},
+        {n: "Wadendrop an der Stufe", v: "2 × 30–45 Sek. / Seite", s: 0, t: "Ferse langsam absenken, nicht wippen."},
+        {n: "Hüftbeuger (Low Lunge)", v: "2 × 40 Sek. / Seite", s: 0},
+        {n: "Hamstrings liegend", v: "2 × 40 Sek. / Seite", s: 0}]}
+    ]
+  },
+  B: {
+    title: "Einheit B",
+    sections: [
+      {h: "Aufwärmen (8–10 Min.)", items: [
+        {n: "Mobilisation wie Einheit A", v: "", s: 0},
+        {n: "Schulterkreisen", v: "10 Wdh.", s: 0},
+        {n: "Scapula-Push-ups", v: "2 × 8", s: 0}]},
+      {h: "Kraft", items: [
+        {n: "Hip Thrust", v: "3 × 8–10", s: 3, w: 1, t: "Oberer Rücken auf der Bank, Hüfte hochdrücken, oben 1 Sek. halten."},
+        {n: "Step-ups (hohe Box)", v: "3 × 8–10 / Seite", s: 3, w: 1, t: "Mit dem Standbein hochdrücken, langsam absenken."},
+        {n: "Einbeiniges Kreuzheben", v: "3 × 8 / Seite", s: 3, w: 1, t: "Hüfte nach hinten, Spielbein streckt sich. Becken parallel zum Boden."},
+        {n: "Liegestütze (erhöht → Boden)", v: "3 × 6–12", s: 3, t: "Körper in einer Linie, Ellbogen ca. 45°."},
+        {n: "Australian Pull-ups / Ringrudern", v: "3 × 8–12", s: 3, t: "Schulterblätter zusammen, Brust zur Stange."},
+        {n: "Dips (unterstützt)", v: "3 × 5–8", s: 3, t: "Schultern unten, nur so tief wie schmerzfrei."},
+        {n: "Hollow Hold", v: "3 × 20–30 Sek.", s: 3, t: "Unterer Rücken am Boden. Zu schwer: Knie anwinkeln."},
+        {n: "Dead Bug", v: "3 × 8 / Seite", s: 3, t: "Gegenüberliegender Arm und Bein, Lendenwirbelsäule flach."},
+        {n: "Farmer's Carry", v: "3 × 20–30 m", s: 3, w: 1, t: "Aufrecht gehen, Schultern unten."},
+        {n: "Einbeinstand (Balance)", v: "2 × 30 Sek. / Seite", s: 2, t: "Auf weicher Matte, Hüfte waagerecht."}]},
+      {h: "Dehn-Session (Waden zuerst)", items: [
+        {n: "Down Dog", v: "3 × 45 Sek.", s: 0, t: "Fersen abwechselnd Richtung Boden pedalieren."},
+        {n: "Wade an der Wand, Knie gestreckt", v: "3 × 45 Sek. / Seite", s: 0},
+        {n: "Wade, Knie gebeugt", v: "3 × 45 Sek. / Seite", s: 0},
+        {n: "Figur-4 / Gesäß", v: "2 × 40 Sek. / Seite", s: 0},
+        {n: "Kindhaltung", v: "60 Sek.", s: 0}]}
+    ]
+  }
+};
+const KEY = "trainingsplan.v1";
+let state;
+try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { state = {}; }
+state.checks = state.checks || {};
+state.weights = state.weights || {};
+state.tab = PLAN[state.tab] ? state.tab : "A";
+function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+const $ = id => document.getElementById(id);
+const id = (u, si, ii) => u + "-" + si + "-" + ii;
+
+function progress() {
+  let total = 0, done = 0;
+  PLAN[state.tab].sections.forEach((sec, si) => sec.items.forEach((it, ii) => {
+    const n = it.s || 1;
+    total += n;
+    for (let k = 0; k < n; k++) if (state.checks[id(state.tab, si, ii) + "-" + k]) done++;
+  }));
+  $("prog").style.width = (total ? done / total * 100 : 0) + "%";
+}
+
+function render() {
+  const tabs = $("tabs"); tabs.innerHTML = "";
+  Object.keys(PLAN).forEach(k => {
+    const b = document.createElement("button");
+    b.textContent = PLAN[k].title; b.className = k === state.tab ? "on" : "";
+    b.onclick = () => { state.tab = k; save(); render(); window.scrollTo(0, 0); };
+    tabs.appendChild(b);
+  });
+  const main = $("main"); main.innerHTML = "";
+  PLAN[state.tab].sections.forEach((sec, si) => {
+    const h = document.createElement("h2"); h.textContent = sec.h; main.appendChild(h);
+    sec.items.forEach((it, ii) => {
+      const base = id(state.tab, si, ii);
+      const tip = document.createElement("div"); tip.className = "tip"; tip.textContent = it.t || "";
+      const infoBtn = () => {
+        if (!it.t) return null;
+        const i = document.createElement("button"); i.className = "info"; i.textContent = "Ausführung";
+        i.onclick = () => tip.classList.toggle("show"); return i;
+      };
+      if (!it.s) {
+        const r = document.createElement("button");
+        r.className = "row" + (state.checks[base + "-0"] ? " on" : "");
+        r.innerHTML = '<span class="box"></span><span class="t"></span>';
+        const t = r.querySelector(".t");
+        t.textContent = it.n;
+        if (it.v) { const s = document.createElement("small"); s.textContent = it.v; t.appendChild(s); }
+        r.onclick = () => { state.checks[base + "-0"] = !state.checks[base + "-0"]; save(); r.classList.toggle("on"); progress(); };
+        main.appendChild(r);
+        if (it.t) { const i = infoBtn(); i.style.marginBottom = "8px"; main.appendChild(i); main.appendChild(tip); }
+        return;
+      }
+      const card = document.createElement("div"); card.className = "ex";
+      const top = document.createElement("div"); top.className = "top";
+      top.innerHTML = '<div><div class="name"></div><div class="vol"></div></div>';
+      top.querySelector(".name").textContent = it.n; top.querySelector(".vol").textContent = it.v;
+      card.appendChild(top);
+      const sets = document.createElement("div"); sets.className = "sets";
+      const upd = () => {
+        let all = true;
+        for (let k = 0; k < it.s; k++) if (!state.checks[base + "-" + k]) all = false;
+        card.classList.toggle("done", all);
+      };
+      for (let k = 0; k < it.s; k++) {
+        const b = document.createElement("button");
+        b.className = "set" + (state.checks[base + "-" + k] ? " on" : ""); b.textContent = k + 1;
+        b.setAttribute("aria-label", it.n + " Satz " + (k + 1));
+        b.onclick = () => {
+          const on = !state.checks[base + "-" + k]; state.checks[base + "-" + k] = on;
+          save(); b.classList.toggle("on", on); upd(); progress();
+        };
+        sets.appendChild(b);
+      }
+      if (it.w) {
+        const w = document.createElement("input"); w.className = "w"; w.type = "text"; w.inputMode = "decimal";
+        w.placeholder = "kg"; w.value = state.weights[base] || ""; w.setAttribute("aria-label", "Gewicht " + it.n);
+        w.oninput = () => { state.weights[base] = w.value; save(); };
+        sets.appendChild(w);
+      }
+      card.appendChild(sets);
+      if (it.t) { const i = infoBtn(); card.appendChild(i); card.appendChild(tip); }
+      main.appendChild(card); upd();
+    });
+  });
+  const n = document.createElement("p"); n.className = "note";
+  n.textContent = "Gewichte bleiben beim Zurücksetzen erhalten, damit du die Progression siehst.";
+  main.appendChild(n);
+  const r = document.createElement("button"); r.className = "reset"; r.textContent = "Einheit zurücksetzen";
+  r.onclick = () => {
+    if (!confirm("Alle Häkchen von " + PLAN[state.tab].title + " zurücksetzen?")) return;
+    Object.keys(state.checks).forEach(k => { if (k.startsWith(state.tab + "-")) delete state.checks[k]; });
+    save(); render(); window.scrollTo(0, 0);
+  };
+  main.appendChild(r);
+  progress();
+}
+
+render();
+</script>
+</body>
+</html>
