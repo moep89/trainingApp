@@ -28,6 +28,18 @@ h2{font-size:15px;color:var(--acc);text-transform:uppercase;letter-spacing:.05em
 .set.on{background:var(--ok);border-color:var(--ok);color:#06210f}
 .w{width:86px;height:54px;border-radius:12px;border:2px solid var(--line);background:var(--bg);color:var(--fg);font-size:17px;text-align:center;margin-left:auto}
 .info{background:none;border:0;color:var(--mut);font-size:14px;padding:6px 0 0;text-decoration:underline}
+.fig{display:flex;gap:6px;margin-bottom:8px}
+.fig figure{flex:1;margin:0;text-align:center}
+.fig svg{width:100%;max-height:130px;background:var(--bg);border-radius:10px}
+.fig figcaption{font-size:12px;color:var(--mut)}
+.fig .b{stroke:#6aa9ff;fill:none;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.fig .h{stroke:#6aa9ff;fill:var(--bg);stroke-width:2.5}
+.fig .a{stroke:var(--acc);fill:none;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.fig .g{stroke:var(--mut);fill:none;stroke-width:1.5}
+.fig .q{stroke:var(--mut);fill:#2d343d;stroke-width:1}
+.fig .e{stroke:var(--mut);fill:none;stroke-width:2.5;stroke-linecap:round}
+.fig .w{fill:#ddd;stroke:#000}
+.fig .d{stroke:var(--acc);stroke-width:1;stroke-dasharray:2 2}
 .tip{display:none;color:var(--mut);font-size:15px;margin-top:6px}
 .tip.show{display:block}
 .row{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:14px;padding:14px;margin-bottom:8px;min-height:60px;width:100%;border:0;color:var(--fg);font-size:17px;text-align:left}
@@ -56,22 +68,22 @@ const PLAN = {
         {n: "Cat-Cow", v: "5 Wdh.", s: 0, t: "Rücken abwechselnd rund und hohl machen."},
         {n: "Hüftkreisen", v: "5 Wdh. / Seite", s: 0},
         {n: "Worlds Greatest Stretch", v: "5 Wdh. / Seite", s: 0},
-        {n: "Glute Bridges", v: "2 × 10", s: 0},
+        {g: "bridge", n: "Glute Bridges", v: "2 × 10", s: 0},
         {n: "Band Walks", v: "2 × 10", s: 0}]},
       {h: "Kraft", items: [
-        {n: "Goblet Squat / Kniebeuge", v: "3 × 6–8", s: 3, w: 1, t: "Kurzhantel vor der Brust, Füße schulterbreit. Brust aufrecht, Knie folgen den Zehen, Fersen am Boden."},
-        {n: "Rumänisches Kreuzheben", v: "3 × 8", s: 3, w: 1, t: "Hantel nah am Körper, Knie leicht gebeugt. Hüfte nach hinten, Rücken gerade, bis Dehnung hinten im Oberschenkel."},
-        {n: "Bulgarian Split Squat", v: "3 × 8–10 / Seite", s: 3, w: 1, t: "Hinterer Fuß auf der Bank. Oberkörper aufrecht, senkrecht absenken."},
-        {n: "Klimmzug (Band) / Latzug", v: "3 × 6–10", s: 3, w: 1, t: "Schulterblätter zuerst nach unten, dann Ellbogen zu den Hüften. Kontrolliert ablassen."},
-        {n: "Schulterdrücken (stehend)", v: "3 × 8–10", s: 3, w: 1, t: "Rippen unten, Gesäß und Bauch anspannen, kein Hohlkreuz."},
-        {n: "Plank + Side Plank", v: "3 × 30–45 Sek.", s: 3, t: "Körper in einer Linie, Gesäß fest. Seitstütz je Seite."},
-        {n: "Pallof Press", v: "3 × 10 / Seite", s: 3, w: 1, t: "Seilzug seitlich auf Brusthöhe. Arme strecken, der Drehung widerstehen."}]},
+        {g: "squat", n: "Goblet Squat / Kniebeuge", v: "3 × 6–8", s: 3, w: 1, t: "Kurzhantel vor der Brust, Füße schulterbreit. Brust aufrecht, Knie folgen den Zehen, Fersen am Boden."},
+        {g: "rdl", n: "Rumänisches Kreuzheben", v: "3 × 8", s: 3, w: 1, t: "Hantel nah am Körper, Knie leicht gebeugt. Hüfte nach hinten, Rücken gerade, bis Dehnung hinten im Oberschenkel."},
+        {g: "split", n: "Bulgarian Split Squat", v: "3 × 8–10 / Seite", s: 3, w: 1, t: "Hinterer Fuß auf der Bank. Oberkörper aufrecht, senkrecht absenken."},
+        {g: "pull", n: "Klimmzug (Band) / Latzug", v: "3 × 6–10", s: 3, w: 1, t: "Schulterblätter zuerst nach unten, dann Ellbogen zu den Hüften. Kontrolliert ablassen."},
+        {g: "press", n: "Schulterdrücken (stehend)", v: "3 × 8–10", s: 3, w: 1, t: "Rippen unten, Gesäß und Bauch anspannen, kein Hohlkreuz."},
+        {g: "plank", n: "Plank + Side Plank", v: "3 × 30–45 Sek.", s: 3, t: "Körper in einer Linie, Gesäß fest. Seitstütz je Seite."},
+        {g: "pallof", n: "Pallof Press", v: "3 × 10 / Seite", s: 3, w: 1, t: "Seilzug seitlich auf Brusthöhe. Arme strecken, der Drehung widerstehen."}]},
       {h: "Dehn-Session (Waden zuerst)", items: [
-        {n: "Wade an der Wand, Knie gestreckt", v: "3 × 45 Sek. / Seite", s: 0, t: "Ferse am Boden, Hüfte zur Wand schieben."},
-        {n: "Wade, Knie gebeugt", v: "3 × 45 Sek. / Seite", s: 0, t: "Ferse bleibt unten. Dehnt Soleus und Achillessehne."},
-        {n: "Wadendrop an der Stufe", v: "2 × 30–45 Sek. / Seite", s: 0, t: "Ferse langsam absenken, nicht wippen."},
-        {n: "Hüftbeuger (Low Lunge)", v: "2 × 40 Sek. / Seite", s: 0},
-        {n: "Hamstrings liegend", v: "2 × 40 Sek. / Seite", s: 0}]}
+        {g: "calf1", n: "Wade an der Wand, Knie gestreckt", v: "3 × 45 Sek. / Seite", s: 0, t: "Ferse am Boden, Hüfte zur Wand schieben."},
+        {g: "calf2", n: "Wade, Knie gebeugt", v: "3 × 45 Sek. / Seite", s: 0, t: "Ferse bleibt unten. Dehnt Soleus und Achillessehne."},
+        {g: "calf3", n: "Wadendrop an der Stufe", v: "2 × 30–45 Sek. / Seite", s: 0, t: "Ferse langsam absenken, nicht wippen."},
+        {g: "lunge", n: "Hüftbeuger (Low Lunge)", v: "2 × 40 Sek. / Seite", s: 0},
+        {g: "ham", n: "Hamstrings liegend", v: "2 × 40 Sek. / Seite", s: 0}]}
     ]
   },
   B: {
@@ -82,25 +94,117 @@ const PLAN = {
         {n: "Schulterkreisen", v: "10 Wdh.", s: 0},
         {n: "Scapula-Push-ups", v: "2 × 8", s: 0}]},
       {h: "Kraft", items: [
-        {n: "Hip Thrust", v: "3 × 8–10", s: 3, w: 1, t: "Oberer Rücken auf der Bank, Hüfte hochdrücken, oben 1 Sek. halten."},
-        {n: "Step-ups (hohe Box)", v: "3 × 8–10 / Seite", s: 3, w: 1, t: "Mit dem Standbein hochdrücken, langsam absenken."},
-        {n: "Einbeiniges Kreuzheben", v: "3 × 8 / Seite", s: 3, w: 1, t: "Hüfte nach hinten, Spielbein streckt sich. Becken parallel zum Boden."},
-        {n: "Liegestütze (erhöht → Boden)", v: "3 × 6–12", s: 3, t: "Körper in einer Linie, Ellbogen ca. 45°."},
-        {n: "Australian Pull-ups / Ringrudern", v: "3 × 8–12", s: 3, t: "Schulterblätter zusammen, Brust zur Stange."},
-        {n: "Dips (unterstützt)", v: "3 × 5–8", s: 3, t: "Schultern unten, nur so tief wie schmerzfrei."},
-        {n: "Hollow Hold", v: "3 × 20–30 Sek.", s: 3, t: "Unterer Rücken am Boden. Zu schwer: Knie anwinkeln."},
-        {n: "Dead Bug", v: "3 × 8 / Seite", s: 3, t: "Gegenüberliegender Arm und Bein, Lendenwirbelsäule flach."},
-        {n: "Farmer's Carry", v: "3 × 20–30 m", s: 3, w: 1, t: "Aufrecht gehen, Schultern unten."},
-        {n: "Einbeinstand (Balance)", v: "2 × 30 Sek. / Seite", s: 2, t: "Auf weicher Matte, Hüfte waagerecht."}]},
+        {g: "thrust", n: "Hip Thrust", v: "3 × 8–10", s: 3, w: 1, t: "Oberer Rücken auf der Bank, Hüfte hochdrücken, oben 1 Sek. halten."},
+        {g: "stepup", n: "Step-ups (hohe Box)", v: "3 × 8–10 / Seite", s: 3, w: 1, t: "Mit dem Standbein hochdrücken, langsam absenken."},
+        {g: "slrdl", n: "Einbeiniges Kreuzheben", v: "3 × 8 / Seite", s: 3, w: 1, t: "Hüfte nach hinten, Spielbein streckt sich. Becken parallel zum Boden."},
+        {g: "pushup", n: "Liegestütze (erhöht → Boden)", v: "3 × 6–12", s: 3, t: "Körper in einer Linie, Ellbogen ca. 45°."},
+        {g: "row", n: "Australian Pull-ups / Ringrudern", v: "3 × 8–12", s: 3, t: "Schulterblätter zusammen, Brust zur Stange."},
+        {g: "dips", n: "Dips (unterstützt)", v: "3 × 5–8", s: 3, t: "Schultern unten, nur so tief wie schmerzfrei."},
+        {g: "hollow", n: "Hollow Hold", v: "3 × 20–30 Sek.", s: 3, t: "Unterer Rücken am Boden. Zu schwer: Knie anwinkeln."},
+        {g: "deadbug", n: "Dead Bug", v: "3 × 8 / Seite", s: 3, t: "Gegenüberliegender Arm und Bein, Lendenwirbelsäule flach."},
+        {g: "carry", n: "Farmer's Carry", v: "3 × 20–30 m", s: 3, w: 1, t: "Aufrecht gehen, Schultern unten."},
+        {g: "balance", n: "Einbeinstand (Balance)", v: "2 × 30 Sek. / Seite", s: 2, t: "Auf weicher Matte, Hüfte waagerecht."}]},
       {h: "Dehn-Session (Waden zuerst)", items: [
-        {n: "Down Dog", v: "3 × 45 Sek.", s: 0, t: "Fersen abwechselnd Richtung Boden pedalieren."},
-        {n: "Wade an der Wand, Knie gestreckt", v: "3 × 45 Sek. / Seite", s: 0},
-        {n: "Wade, Knie gebeugt", v: "3 × 45 Sek. / Seite", s: 0},
-        {n: "Figur-4 / Gesäß", v: "2 × 40 Sek. / Seite", s: 0},
-        {n: "Kindhaltung", v: "60 Sek.", s: 0}]}
+        {g: "dog", n: "Down Dog", v: "3 × 45 Sek.", s: 0, t: "Fersen abwechselnd Richtung Boden pedalieren."},
+        {g: "calf1", n: "Wade an der Wand, Knie gestreckt", v: "3 × 45 Sek. / Seite", s: 0},
+        {g: "calf2", n: "Wade, Knie gebeugt", v: "3 × 45 Sek. / Seite", s: 0},
+        {g: "glute", n: "Figur-4 / Gesäß", v: "2 × 40 Sek. / Seite", s: 0},
+        {g: "child", n: "Kindhaltung", v: "60 Sek.", s: 0}]}
     ]
   }
 };
+
+// Schemabilder: Koordinaten 0-100, y nach oben. h=Kopf, l=Körper, a=betonte Glieder, e=Geräte
+const STAND = [[50,72],[50,45]], LEGS = [[50,45],[50,27],[50,10],[57,10]];
+const man = (arm, e) => ({h:[50,80], l:[STAND, LEGS, arm], e:e||[]});
+const BAR = ["L",25,92,75,92];
+const FIG = {
+  squat: [
+    {h:[50,80], l:[STAND, LEGS, [[50,70],[58,60],[54,66]]], e:[["W",55,66]]},
+    {h:[52,66], l:[[[48,58],[36,30]], [[36,30],[58,32],[50,10],[58,10]], [[48,58],[60,50],[54,56]]], e:[["W",55,56]]}],
+  rdl: [
+    {h:[50,80], l:[STAND, LEGS, [[50,70],[52,55],[52,42]]], e:[["L",40,42,64,42],["W",40,42],["W",64,42]]},
+    {h:[80,56], l:[[[72,54],[36,46]], [[36,46],[44,28],[44,10],[52,10]], [[72,54],[68,34]]], e:[["L",58,32,78,32],["W",58,32],["W",78,32]]}],
+  split: [
+    {h:[48,72], l:[[[48,64],[48,40]], [[48,40],[60,28],[58,10],[65,10]], [[48,40],[36,22],[24,30]]], e:[["R",10,10,22,18]]},
+    {h:[48,60], l:[[[48,52],[48,28]], [[48,28],[64,28],[60,10],[67,10]], [[48,28],[34,20],[24,30]]], e:[["R",10,10,22,18]]}],
+  pull: [
+    {h:[50,64], l:[[[50,56],[50,30]], [[50,30],[46,10]], [[50,56],[44,76],[50,92]]], e:[BAR]},
+    {h:[50,98], l:[[[50,90],[50,64]], [[50,64],[46,44]], [[50,88],[40,80],[50,92]]], e:[BAR]}],
+  press: [
+    {h:[50,80], l:[STAND, LEGS, [[50,70],[58,62],[52,74]]], e:[["W",52,76]]},
+    {h:[50,80], l:[STAND, LEGS, [[50,70],[51,90]]], e:[["W",51,94]]}],
+  plank: [
+    {h:[14,30], l:[[[20,25],[55,21],[88,12]], [[20,25],[20,10],[32,10]]]},
+    {h:[22,45], l:[[[26,38],[58,22],[90,12]], [[26,38],[26,10],[38,10]]], a:[[[26,38],[26,62]]]}],
+  pallof: [
+    {h:[50,80], l:[STAND, LEGS, [[50,68],[62,60],[52,58]]], e:[["D",5,58,52,58],["R",0,50,6,16]]},
+    {h:[50,80], l:[STAND, LEGS, [[50,68],[80,66]]], e:[["D",5,58,80,66],["R",0,50,6,16]]}],
+  bridge: [
+    {h:[8,22], l:[[[14,14],[40,12]], [[40,12],[56,36],[76,10]], [[14,14],[48,20]]]},
+    {h:[8,22], l:[[[14,14],[40,12]], [[40,12],[58,36],[76,10]], [[14,14],[48,20]]]}].slice(0,1),
+  thrust: [
+    {h:[14,26], l:[[[18,28],[52,14]], [[52,14],[70,34],[74,10],[82,10]]], e:[["R",6,10,22,14]]},
+    {h:[14,30], l:[[[18,32],[52,36]], [[52,36],[72,36],[74,10],[82,10]]], e:[["R",6,10,22,14]]}],
+  stepup: [
+    {h:[40,80], l:[[[40,72],[40,45]], [[40,45],[46,30],[48,18],[54,18]], [[40,45],[36,27],[34,10]], [[40,70],[40,55],[40,44]]], e:[["R",44,10,30,8]]},
+    {h:[55,90], l:[[[55,82],[55,55]], [[55,55],[55,38],[55,20],[62,20]], [[55,55],[68,50],[68,36]], [[55,80],[55,65],[55,54]]], e:[["R",44,10,30,10]]}],
+  slrdl: [
+    {h:[50,80], l:[STAND, LEGS, [[50,70],[52,55],[52,45]]], e:[["W",52,44]]},
+    {h:[86,54], l:[[[78,52],[50,46]], [[50,46],[50,28],[50,10],[57,10]], [[78,52],[78,32]]], a:[[[50,46],[16,54]]], e:[["W",78,30]]}],
+  pushup: [
+    {h:[92,52], l:[[[86,48],[48,32],[10,12]], [[86,48],[86,10]]]},
+    {h:[92,26], l:[[[86,24],[48,18],[10,12]], [[86,24],[76,14],[86,10]]]}],
+  row: [
+    {h:[78,38], l:[[[72,34],[44,24],[14,12]], [[72,34],[75,60]]], e:[["L",55,60,95,60],["L",55,10,55,60]]},
+    {h:[76,48], l:[[[70,44],[44,24],[14,12]], [[70,44],[64,54],[75,60]]], e:[["L",55,60,95,60],["L",55,10,55,60]]}],
+  dips: [
+    {h:[50,86], l:[[[50,78],[50,50]], [[50,50],[40,40],[30,30]], [[50,78],[50,56]]], e:[["R",42,52,16,4]]},
+    {h:[50,72], l:[[[50,64],[50,38]], [[50,38],[40,28],[30,22]], [[50,64],[42,58],[50,56]]], e:[["R",42,52,16,4]]}],
+  hollow: [
+    {h:[22,18], l:[[[26,14],[50,10]], [[50,10],[88,28]], [[26,14],[10,30]]]}],
+  deadbug: [
+    {h:[16,18], l:[[[22,12],[50,12]], [[50,12],[50,36],[74,36]], [[22,12],[22,38]]]},
+    {h:[16,18], l:[[[22,12],[50,12]], [[50,12],[50,36],[74,36]], [[22,12],[10,26]]], a:[[[50,12],[86,18]]]}],
+  carry: [man([[50,70],[50,50],[50,40]], [["W",50,38]])],
+  balance: [{h:[50,80], l:[STAND, LEGS, [[50,70],[40,60],[60,60]]], a:[[[50,45],[64,45],[64,28]]], e:[["R",34,10,32,4]]}],
+  calf1: [{h:[62,80], l:[[[60,72],[48,48]], [[48,48],[30,10],[22,10]], [[48,48],[55,30],[62,10],[69,10]], [[62,70],[80,66]]], e:[["L",86,5,86,90]]}],
+  calf2: [{h:[62,74], l:[[[60,66],[52,46]], [[52,46],[40,28],[30,10],[22,10]], [[52,46],[64,28],[68,10],[75,10]], [[62,64],[82,62]]], e:[["L",86,5,86,90]]}],
+  calf3: [man([[50,70],[70,60]], [["R",40,10,24,8],["L",76,10,76,80]])],
+  dog: [{h:[28,26], l:[[[30,22],[50,62]], [[50,62],[80,10]], [[30,22],[14,10]]], a:[[[50,62],[80,10],[88,10]]]}],
+  lunge: [{h:[52,76], l:[[[52,68],[50,42]], [[50,42],[68,30],[66,10],[74,10]], [[50,42],[30,12],[14,10]], [[52,64],[64,40]]]}],
+  ham: [{h:[8,22], l:[[[14,14],[40,12]], [[40,12],[66,52]], [[40,12],[84,12]], [[14,14],[48,36]]]}],
+  glute: [{h:[8,22], l:[[[14,14],[40,12]], [[40,12],[58,36],[76,10]], [[40,12],[50,32]]]}],
+  child: [{h:[22,22], l:[[[30,28],[66,18]], [[66,18],[60,10],[30,10]], [[30,28],[10,10]]]}]
+};
+function figSvg(p) {
+  const N = "http://www.w3.org/2000/svg", y = v => 100 - v;
+  const svg = document.createElementNS(N, "svg");
+  svg.setAttribute("viewBox", "0 0 100 100"); svg.setAttribute("aria-hidden", "true");
+  const add = (tag, attrs) => { const e = document.createElementNS(N, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); svg.appendChild(e); };
+  add("line", {x1: 2, y1: y(10), x2: 98, y2: y(10), class: "g"});
+  (p.e || []).forEach(q => {
+    if (q[0] === "R") add("rect", {x: q[1], y: y(q[2] + q[4]), width: q[3], height: q[4], rx: 2, class: "q"});
+    else if (q[0] === "L") add("line", {x1: q[1], y1: y(q[2]), x2: q[3], y2: y(q[4]), class: "e"});
+    else if (q[0] === "D") add("line", {x1: q[1], y1: y(q[2]), x2: q[3], y2: y(q[4]), class: "d"});
+    else if (q[0] === "W") add("circle", {cx: q[1], cy: y(q[2]), r: 4.5, class: "w"});
+  });
+  const poly = (pts, cls) => add("polyline", {points: pts.map(q => q[0] + "," + y(q[1])).join(" "), class: cls});
+  p.l.forEach(pts => poly(pts, "b"));
+  (p.a || []).forEach(pts => poly(pts, "a"));
+  add("circle", {cx: p.h[0], cy: y(p.h[1]), r: 6, class: "h"});
+  return svg;
+}
+function figure(key) {
+  const poses = FIG[key]; if (!poses) return null;
+  const box = document.createElement("div"); box.className = "fig";
+  poses.forEach((p, i) => {
+    const f = document.createElement("figure"); f.appendChild(figSvg(p));
+    if (poses.length > 1) { const c = document.createElement("figcaption"); c.textContent = key === "plank" ? ["Plank", "Side Plank"][i] : ["Start", "Ende"][i]; f.appendChild(c); }
+    box.appendChild(f);
+  });
+  return box;
+}
 const KEY = "trainingsplan.v1";
 let state;
 try { state = JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { state = {}; }
@@ -134,9 +238,11 @@ function render() {
     const h = document.createElement("h2"); h.textContent = sec.h; main.appendChild(h);
     sec.items.forEach((it, ii) => {
       const base = id(state.tab, si, ii);
-      const tip = document.createElement("div"); tip.className = "tip"; tip.textContent = it.t || "";
+      const tip = document.createElement("div"); tip.className = "tip";
+      const fg = it.g && figure(it.g); if (fg) tip.appendChild(fg);
+      if (it.t) tip.appendChild(document.createTextNode(it.t));
       const infoBtn = () => {
-        if (!it.t) return null;
+        if (!it.t && !fg) return null;
         const i = document.createElement("button"); i.className = "info"; i.textContent = "Ausführung";
         i.onclick = () => tip.classList.toggle("show"); return i;
       };
@@ -149,7 +255,7 @@ function render() {
         if (it.v) { const s = document.createElement("small"); s.textContent = it.v; t.appendChild(s); }
         r.onclick = () => { state.checks[base + "-0"] = !state.checks[base + "-0"]; save(); r.classList.toggle("on"); progress(); };
         main.appendChild(r);
-        if (it.t) { const i = infoBtn(); i.style.marginBottom = "8px"; main.appendChild(i); main.appendChild(tip); }
+        if (tip.firstChild) { const i = infoBtn(); i.style.marginBottom = "8px"; main.appendChild(i); main.appendChild(tip); }
         return;
       }
       const card = document.createElement("div"); card.className = "ex";
@@ -180,7 +286,7 @@ function render() {
         sets.appendChild(w);
       }
       card.appendChild(sets);
-      if (it.t) { const i = infoBtn(); card.appendChild(i); card.appendChild(tip); }
+      if (tip.firstChild) { const i = infoBtn(); card.appendChild(i); card.appendChild(tip); }
       main.appendChild(card); upd();
     });
   });
