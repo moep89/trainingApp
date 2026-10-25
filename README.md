@@ -1,1 +1,1 @@
-# mixed
+# trainingApp
